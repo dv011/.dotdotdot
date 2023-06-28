@@ -119,7 +119,37 @@ fi
 
 export PATH=$PATH:/usr/local/go/bin
 
-# shows only the parent and current directorys, ~/.../parent/cwd:
-export PROMPT_DIRTRIM=1
-PS1='\n\w: '
+PATH=$PATH":/home/dev/.local/bin/scripts"
+PATH=$PATH":/home/dev/bin/scripts"
 
+# shows current directory only, [cwd]
+# PS1='\n[\W] '
+
+# shows fancy lines with username, i like this one, maybe a bit less than the main one above
+PS1="\n \[\033[0;34m\]┌─────(\[\033[1;35m\]\u\[\033[0;34m\])─────(\[\033[1;32m\]\W\[\033[0;34m\]) \n └> \[\033[1;36m\]\$ \[\033[0m\]"
+
+export CLASSPATH=/usr/share/java/mysql-connector-java-8.0.33.jar:$CLASSPATH
+
+DIR_STACK=""
+export DIR_STACK
+
+pushd() {
+    dirname=$1
+    if cd ${dirname:?"missing directory name."}
+    then
+        DIR_STACK="$dirname ${DIR_STACK:-$PWD }"
+        echo "$DIR_STACK"
+    else
+        echo still in $PWD.
+    fi
+}
+
+popd() {
+    if [ -n "DIR_STACK" ]; then
+        DIR_STACK=${DIR_STACK#* }
+        cd ${DIR_STACK%% *}
+        echo "$PWD"
+    else
+        echo "Stack is empty, still in $PWD."
+    fi
+}
