@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# use mod+c with a link or other text highlighted
+# this script saves that text to a specified file
+
+# Prompt the user to select a file type using dmenu
+choice=$(echo -e "General\nResearch\nNeovim" | dmenu -p "Select a file type:")
+
+# Check the user's choice and set the file accordingly
+case $choice in
+    General) file=".dotdotdot/bookmarks/general.txt";;
+    Research) file=".dotdotdot/bookmarks/research.txt";;
+    Neovim) file=".dotdotdot/bookmarks/neovim.txt";;
+    *) echo "Invalid choice. Exiting."; exit 1;;
+esac
+
+# Get the highlighted text from the clipboard using xclip
+text=$(xclip -o)
+
+# Prompt the user to input additional text (optional) using dmenu
+additional_text=$(echo "" | dmenu -p "Enter additional text (optional):")
+
+# Append the text to the selected file
+echo -e "$text\nNote: $additional_text" >> "$HOME/$file"
+
+# Display a notification
+notify-send "Text saved to $file"
