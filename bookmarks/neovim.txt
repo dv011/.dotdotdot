@@ -1,0 +1,8 @@
+https://github.com/mawkler/modicator.nvim/
+Note: changes the color of the cursors current line number based on your theme
+https://vonheikemen.github.io/devlog/tools/neovim-lsp-client-guide/
+Note: lsp guide
+https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/you-might-not-need-lsp-zero.md
+Note: do you need lsp-zero?
+https://github.com/junegunn/fzf
+Note: study
