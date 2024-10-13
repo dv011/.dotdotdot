@@ -1,0 +1,5 @@
+tmux new-session -d -s dev
+
+tmux send-keys -t dev:0.0 'nvim .' C-m
+
+tmux attach-session -t dev
