@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# use mod+v with to paste a link or other text
+# this is broken, does not pull up dmenu list for some reason
+# todo
+
+# Prompt the user to select a file type using dmenu
+choice=$(echo -e "General\nResearch\nTodo\nNeovim" | dmenu -p "Select a file type:")
+
+# Check the user's choice and set the file accordingly
+case $choice in
+    General) file="$HOME/general.txt";;
+    Research) file="$HOME/research.txt";;
+    Todo) file="$HOME/todo.txt";;
+    Neovim) file="$HOME/neovim.txt";;
+    *) echo "Invalid choice. Exiting."; exit 1;;
+esac
+
+# Check if the file exists
+if [ ! -f "$file" ]; then
+    echo "File $file not found. Exiting."
+    exit 1
+fi
+
+# Declare an associative array to map variable names to bookmark text
+declare -A bookmarks
+
+# Read the contents of the file, excluding lines starting with "Note:"
+while IFS= read -r line; do
+    if [[ ! "$line" =~ ^Note: ]]; then
+        # Generate a unique variable name for the bookmark
+        variable="bookmark_$((++count))"
+        # Store the bookmark text in the associative array
+        bookmarks[$variable]="$line"
+        # Construct a menu entry with the variable name
+        menu_entry+="$variable\n"
+    fi
+done < "$file"
+
+# Prompt the user to select a bookmark variable using dmenu
+selected_variable=$(echo -e "$menu_entry" | dmenu -p "Select a bookmark:")
+
+# Use the selected variable to retrieve the corresponding bookmark text
+selected_bookmark="${bookmarks[$selected_variable]}"
+
+# Use xdotool to type the selected bookmark
+xdotool type --clearmodifiers "$selected_bookmark"
